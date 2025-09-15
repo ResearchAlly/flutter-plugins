@@ -337,6 +337,7 @@ public class SwiftHealthPlugin: NSObject, FlutterPlugin {
         dataQuantityTypesDict[HealthConstants.HEART_RATE_VARIABILITY_SDNN] = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
         dataQuantityTypesDict[HealthConstants.HEIGHT] = HKQuantityType.quantityType(forIdentifier: .height)!
         dataQuantityTypesDict[HealthConstants.RESTING_HEART_RATE] = HKQuantityType.quantityType(forIdentifier: .restingHeartRate)!
+        dataQuantityTypesDict[HealthConstants.PUSH_COUNT] = HKSampleType.quantityType(forIdentifier: .pushCount)!
         dataQuantityTypesDict[HealthConstants.STEPS] = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         dataQuantityTypesDict[HealthConstants.WAIST_CIRCUMFERENCE] = HKQuantityType.quantityType(forIdentifier: .waistCircumference)!
         dataQuantityTypesDict[HealthConstants.WALKING_HEART_RATE] = HKQuantityType.quantityType(forIdentifier: .walkingHeartRateAverage)!
@@ -420,6 +421,7 @@ public class SwiftHealthPlugin: NSObject, FlutterPlugin {
         dataTypesDict[HealthConstants.HEIGHT] = HKSampleType.quantityType(forIdentifier: .height)!
         dataTypesDict[HealthConstants.INSULIN_DELIVERY] = HKSampleType.quantityType(forIdentifier: .insulinDelivery)!
         dataTypesDict[HealthConstants.RESTING_HEART_RATE] = HKSampleType.quantityType(forIdentifier: .restingHeartRate)!
+        dataTypesDict[HealthConstants.PUSH_COUNT] = HKSampleType.quantityType(forIdentifier: .pushCount)!
         dataTypesDict[HealthConstants.STEPS] = HKSampleType.quantityType(forIdentifier: .stepCount)!
         dataTypesDict[HealthConstants.WAIST_CIRCUMFERENCE] = HKSampleType.quantityType(forIdentifier: .waistCircumference)!
         dataTypesDict[HealthConstants.WALKING_HEART_RATE] = HKSampleType.quantityType(forIdentifier: .walkingHeartRateAverage)!
