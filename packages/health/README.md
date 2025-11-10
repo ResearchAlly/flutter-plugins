@@ -74,6 +74,16 @@ An example of asking for permission to read and write heart rate data is shown b
 <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
 ```
 
+By default, Health Connect restricts read data to 30 days from when permission has been granted.
+
+You can check and request access to historical data using the `isHealthDataHistoryAuthorized` and `requestHealthDataHistoryAuthorization` methods, respectively.
+
+The above methods require the following permission to be declared:
+
+```xml
+<uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY"/>
+```
+
 Accessing fitness data (e.g. Steps) requires permission to access the "Activity Recognition" API. To set it add the following line to your `AndroidManifest.xml` file.
 
 ```xml
@@ -146,12 +156,16 @@ android.useAndroidX=true
 
 See the example app for detailed examples of how to use the Health API.
 
-The Health plugin is used via the `Health()` singleton using the different methods for handling permissions and getting and adding data to Apple Health or Google Health Connect.
+A instance of the Health plugin is create using the `Health()` constructor and is subsequently configured calling the `configure` method. Once configured, the plugin can be used for handling permissions and getting and adding data to Apple Health or Google Health Connect.
 Below is a simplified flow of how to use the plugin.
 
 ```dart
+
+  // Global Health instance
+  final health = Health();
+
   // configure the health plugin before use.
-  Health().configure();
+  await health.configure();
 
 
   // define the types to get
@@ -161,12 +175,12 @@ Below is a simplified flow of how to use the plugin.
   ];
 
   // requesting access to the data types before reading them
-  bool requested = await Health().requestAuthorization(types);
+  bool requested = await health.requestAuthorization(types);
 
   var now = DateTime.now();
 
   // fetch health data from the last 24 hours
-  List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
+  List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
      now.subtract(Duration(days: 1)), now, types);
 
   // request permissions to write steps and blood glucose
@@ -175,20 +189,20 @@ Below is a simplified flow of how to use the plugin.
       HealthDataAccess.READ_WRITE,
       HealthDataAccess.READ_WRITE
   ];
-  await Health().requestAuthorization(types, permissions: permissions);
+  await health.requestAuthorization(types, permissions: permissions);
 
   // write steps and blood glucose
-  bool success = await Health().writeHealthData(10, HealthDataType.STEPS, now, now);
-  success = await Health().writeHealthData(3.1, HealthDataType.BLOOD_GLUCOSE, now, now);
+  bool success = await health.writeHealthData(10, HealthDataType.STEPS, now, now);
+  success = await health.writeHealthData(3.1, HealthDataType.BLOOD_GLUCOSE, now, now);
 
   // you can also specify the recording method to store in the metadata (default is RecordingMethod.automatic)
   // on iOS only `RecordingMethod.automatic` and `RecordingMethod.manual` are supported
   // Android additionally supports `RecordingMethod.active` and `RecordingMethod.unknown`
-  success &= await Health().writeHealthData(10, HealthDataType.STEPS, now, now, recordingMethod: RecordingMethod.manual);
+  success &= await health.writeHealthData(10, HealthDataType.STEPS, now, now, recordingMethod: RecordingMethod.manual);
 
   // get the number of steps for today
   var midnight = DateTime(now.year, now.month, now.day);
-  int? steps = await Health().getTotalStepsInInterval(midnight, now);
+  int? steps = await health.getTotalStepsInInterval(midnight, now);
 ```
 
 ### Health Data
@@ -256,6 +270,22 @@ flutter: Health Plugin Error:
 flutter:  PlatformException(FlutterHealth, Results are null, Optional(Error Domain=com.apple.healthkit Code=6 "Protected health data is inaccessible" UserInfo={NSLocalizedDescription=Protected health data is inaccessible}))
 ```
 
+### Fetch single health data by UUID
+
+In order to retrieve a single record, it is required to provide `String uuid` and `HealthDataType type`.
+
+Please see example below:
+```dart
+HealthDataPoint? healthPoint = await health.getHealthDataByUUID(
+  uuid: 'random-uuid-string',
+  type: HealthDataType.STEPS,
+);
+```
+```
+I/FLUTTER_HEALTH( 9161): Success: {uuid=random-uuid-string, value=12, date_from=1742259061009, date_to=1742259092888, source_id=, source_name=com.google.android.apps.fitness, recording_method=0}
+```
+> Assuming that the `uuid` and `type` are coming from your database.
+
 ### Filtering by recording method
 
 Google Health Connect and Apple HealthKit both provide ways to distinguish samples collected "automatically" and manually entered data by the user.
@@ -266,7 +296,7 @@ Google Health Connect and Apple HealthKit both provide ways to distinguish sampl
 As such, when fetching data you have the option to filter the fetched data by recording method as such:
 
 ```dart
-List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
+List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
   types: types,
   startTime: yesterday,
   endTime: now,
@@ -294,8 +324,56 @@ If you have a list of data points, duplicates can be removed with:
 
 ```dart
 List<HealthDataPoint> points = ...;
-points = Health().removeDuplicates(points);
+points = health.removeDuplicates(points);
 ```
+
+### Android: Reading Health Data in Background
+Currently health connect allows apps to read health data in the background. In order to achieve this add the following permission to your `AndroidManifest.XML`:
+```XML
+<!-- For reading data in background -->
+<uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"/>
+```
+Furthermore, the plugin now exposes three new functions to help you check and request access to read data in the background:
+1. `isHealthDataInBackgroundAvailable()`: Checks if the Health Data in Background feature is available
+2. `isHealthDataInBackgroundAuthorized()`: Checks the current status of the Health Data in Background permission
+3. `requestHealthDataInBackgroundAuthorization()`: Requests the Health Data in Background permission.
+
+### Fetch single health data by UUID
+
+In order to retrieve a single record, it is required to provide `String uuid` and `HealthDataType type`.
+
+Please see example below:
+```dart
+HealthDataPoint? healthPoint = await health.getHealthDataByUUID(
+  uuid: 'E9F2EEAD-8FC5-4CE5-9FF5-7C4E535FB8B8',
+  type: HealthDataType.WORKOUT,
+);
+```
+```
+data by UUID: HealthDataPoint -
+    uuid: E9F2EEAD-8FC5-4CE5-9FF5-7C4E535FB8B8,
+    value: WorkoutHealthValue - workoutActivityType: RUNNING,
+           totalEnergyBurned: null,
+           totalEnergyBurnedUnit: KILOCALORIE,
+           totalDistance: 2400,
+           totalDistanceUnit: METER
+           totalSteps: null,
+           totalStepsUnit: null,
+    unit: NO_UNIT,
+    dateFrom: 2025-05-02 07:31:00.000,
+    dateTo: 2025-05-02 08:25:00.000,
+    dataType: WORKOUT,
+    platform: HealthPlatformType.appleHealth,
+    deviceId: unknown,
+    sourceId: com.apple.Health,
+    sourceName: Health
+    recordingMethod: RecordingMethod.manual
+    workoutSummary: WorkoutSummary - workoutType: runningtotalDistance: 2400, totalEnergyBurned: 0, totalSteps: 0
+    metadata: null
+    deviceModel: null
+```
+> Assuming that the `uuid` and `type` are coming from your database.
+
 
 ## Data Types
 
@@ -355,6 +433,15 @@ The plugin supports the following [`HealthDataType`](https://pub.dev/documentati
 | ELECTROCARDIOGRAM            | VOLT                    | yes              |                           | Requires Apple Watch to write the data                                                                                             |
 | NUTRITION                    | NO_UNIT                 | yes              | yes                       |                                                                                                                                    |
 | INSULIN_DELIVERY             | INTERNATIONAL_UNIT      | yes              |                           |                                                                                                                                    |
+| MENSTRUATION_FLOW            | NO_UNIT                 | yes              | yes                       |                                                                                                                                    |
+| WATER_TEMPERATURE            | DEGREE_CELSIUS          | yes              |                           | Related to/Requires Apple Watch Ultra's Underwater Diving Workout                                                                  |
+| UNDERWATER_DEPTH             | METER                   | yes              |                           | Related to/Requires Apple Watch Ultra's Underwater Diving Workout                                                                  |
+| UV_INDEX                     | COUNT                   | yes              |                           |                                                                                                                                    |
+| LEAN_BODY_MASS               | KILOGRAMS               | yes              | yes                       |                                                                                                                                    |
+| WALKING_SPEED                | METER_PER_SECOND        | yes              | (yes)                     | On Android this will be recorded as `SPEED` with similar unit                                                                      |
+| APPLE_MOVE_TIME              | SECOND                  | yes              |                           | READ Only                                                                                                                          |
+| APPLE_STAND_HOUR             | HOUR                    | yes              |                           | READ Only                                                                                                                          |
+| APPLE_MOVE_TIME              | SECOND                  | yes              |                           | READ Only                                                                                                                          |
 
 ## Workout Types
 
@@ -443,6 +530,7 @@ The plugin supports the following [`HealthWorkoutActivityType`](https://pub.dev/
 | TENNIS                           | yes              | yes                       |                                                                                                 |
 | TRACK_AND_FIELD                  | yes              |                           |                                                                                                 |
 | TRADITIONAL_STRENGTH_TRAINING    | yes              | (yes)                     | on Android this will be stored as STRENGTH_TRAINING                                             |
+| UNDERWATER_DIVING                | yes              |                           |                                                                                                 |
 | VOLLEYBALL                       | yes              | yes                       |                                                                                                 |
 | WALKING                          | yes              | yes                       |                                                                                                 |
 | WATER_FITNESS                    | yes              |                           |                                                                                                 |

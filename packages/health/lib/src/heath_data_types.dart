@@ -4,6 +4,9 @@ part of '../health.dart';
 enum HealthDataType {
   ACTIVE_ENERGY_BURNED,
   ATRIAL_FIBRILLATION_BURDEN,
+  APPLE_STAND_HOUR,
+  APPLE_MOVE_TIME,
+  APPLE_STAND_TIME,
   AUDIOGRAM,
   BASAL_ENERGY_BURNED,
   BLOOD_GLUCOSE,
@@ -11,6 +14,7 @@ enum HealthDataType {
   BLOOD_PRESSURE_DIASTOLIC,
   BLOOD_PRESSURE_SYSTOLIC,
   BODY_FAT_PERCENTAGE,
+  LEAN_BODY_MASS,
   BODY_MASS_INDEX,
   BODY_TEMPERATURE,
   BODY_WATER_MASS,
@@ -71,6 +75,8 @@ enum HealthDataType {
   DISTANCE_CYCLING,
   FLIGHTS_CLIMBED,
   DISTANCE_DELTA,
+  WALKING_SPEED,
+  SPEED,
   MINDFULNESS,
   WATER,
   SLEEP_ASLEEP,
@@ -91,12 +97,15 @@ enum HealthDataType {
   HEADACHE_SEVERE,
   HEADACHE_UNSPECIFIED,
   NUTRITION,
+  UV_INDEX,
   WHEELCHAIR_PUSHES,
   // HealthKit Characteristics
   GENDER,
   BIRTH_DATE,
   BLOOD_TYPE,
   MENSTRUATION_FLOW,
+  WATER_TEMPERATURE,
+  UNDERWATER_DEPTH,
 
   // Heart Rate events (specific to Apple Watch)
   HIGH_HEART_RATE_EVENT,
@@ -106,7 +115,7 @@ enum HealthDataType {
   ELECTROCARDIOGRAM,
 
   // Health Connect
-  TOTAL_CALORIES_BURNED
+  TOTAL_CALORIES_BURNED,
 }
 
 /// Access types for Health Data.
@@ -120,6 +129,9 @@ enum HealthDataAccess {
 const List<HealthDataType> dataTypeKeysIOS = [
   HealthDataType.ACTIVE_ENERGY_BURNED,
   HealthDataType.ATRIAL_FIBRILLATION_BURDEN,
+  HealthDataType.APPLE_STAND_HOUR,
+  HealthDataType.APPLE_MOVE_TIME,
+  HealthDataType.APPLE_STAND_TIME,
   HealthDataType.AUDIOGRAM,
   HealthDataType.BASAL_ENERGY_BURNED,
   HealthDataType.BLOOD_GLUCOSE,
@@ -127,6 +139,7 @@ const List<HealthDataType> dataTypeKeysIOS = [
   HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
   HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
   HealthDataType.BODY_FAT_PERCENTAGE,
+  HealthDataType.LEAN_BODY_MASS,
   HealthDataType.BODY_MASS_INDEX,
   HealthDataType.BODY_TEMPERATURE,
   HealthDataType.DIETARY_CARBS_CONSUMED,
@@ -188,6 +201,7 @@ const List<HealthDataType> dataTypeKeysIOS = [
   HealthDataType.DISTANCE_WALKING_RUNNING,
   HealthDataType.DISTANCE_SWIMMING,
   HealthDataType.DISTANCE_CYCLING,
+  HealthDataType.WALKING_SPEED,
   HealthDataType.MINDFULNESS,
   HealthDataType.SLEEP_ASLEEP,
   HealthDataType.SLEEP_AWAKE,
@@ -210,6 +224,10 @@ const List<HealthDataType> dataTypeKeysIOS = [
   HealthDataType.BIRTH_DATE,
   HealthDataType.BLOOD_TYPE,
   HealthDataType.MENSTRUATION_FLOW,
+  HealthDataType.WATER_TEMPERATURE,
+  HealthDataType.UNDERWATER_DEPTH,
+  HealthDataType.UV_INDEX,
+  HealthDataType.TOTAL_CALORIES_BURNED,
 ];
 
 /// List of data types available on Android
@@ -220,6 +238,7 @@ const List<HealthDataType> dataTypeKeysAndroid = [
   HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
   HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
   HealthDataType.BODY_FAT_PERCENTAGE,
+  HealthDataType.LEAN_BODY_MASS,
   HealthDataType.BODY_MASS_INDEX,
   HealthDataType.BODY_TEMPERATURE,
   HealthDataType.BODY_WATER_MASS,
@@ -229,6 +248,7 @@ const List<HealthDataType> dataTypeKeysAndroid = [
   HealthDataType.STEPS,
   HealthDataType.WEIGHT,
   HealthDataType.DISTANCE_DELTA,
+  HealthDataType.SPEED,
   HealthDataType.SLEEP_ASLEEP,
   HealthDataType.SLEEP_AWAKE_IN_BED,
   HealthDataType.SLEEP_AWAKE,
@@ -253,6 +273,9 @@ const List<HealthDataType> dataTypeKeysAndroid = [
 const Map<HealthDataType, HealthDataUnit> dataTypeToUnit = {
   HealthDataType.ACTIVE_ENERGY_BURNED: HealthDataUnit.KILOCALORIE,
   HealthDataType.ATRIAL_FIBRILLATION_BURDEN: HealthDataUnit.PERCENT,
+  HealthDataType.APPLE_STAND_HOUR: HealthDataUnit.HOUR,
+  HealthDataType.APPLE_MOVE_TIME: HealthDataUnit.SECOND,
+  HealthDataType.APPLE_STAND_TIME: HealthDataUnit.SECOND,
   HealthDataType.AUDIOGRAM: HealthDataUnit.DECIBEL_HEARING_LEVEL,
   HealthDataType.BASAL_ENERGY_BURNED: HealthDataUnit.KILOCALORIE,
   HealthDataType.BLOOD_GLUCOSE: HealthDataUnit.MILLIGRAM_PER_DECILITER,
@@ -260,6 +283,7 @@ const Map<HealthDataType, HealthDataUnit> dataTypeToUnit = {
   HealthDataType.BLOOD_PRESSURE_DIASTOLIC: HealthDataUnit.MILLIMETER_OF_MERCURY,
   HealthDataType.BLOOD_PRESSURE_SYSTOLIC: HealthDataUnit.MILLIMETER_OF_MERCURY,
   HealthDataType.BODY_FAT_PERCENTAGE: HealthDataUnit.PERCENT,
+  HealthDataType.LEAN_BODY_MASS: HealthDataUnit.KILOGRAM,
   HealthDataType.BODY_MASS_INDEX: HealthDataUnit.NO_UNIT,
   HealthDataType.BODY_TEMPERATURE: HealthDataUnit.DEGREE_CELSIUS,
   HealthDataType.BODY_WATER_MASS: HealthDataUnit.KILOGRAM,
@@ -320,6 +344,8 @@ const Map<HealthDataType, HealthDataUnit> dataTypeToUnit = {
   HealthDataType.DISTANCE_CYCLING: HealthDataUnit.METER,
   HealthDataType.FLIGHTS_CLIMBED: HealthDataUnit.COUNT,
   HealthDataType.DISTANCE_DELTA: HealthDataUnit.METER,
+  HealthDataType.WALKING_SPEED: HealthDataUnit.METER_PER_SECOND,
+  HealthDataType.SPEED: HealthDataUnit.METER_PER_SECOND,
 
   HealthDataType.WATER: HealthDataUnit.LITER,
   HealthDataType.SLEEP_ASLEEP: HealthDataUnit.MINUTE,
@@ -357,6 +383,9 @@ const Map<HealthDataType, HealthDataUnit> dataTypeToUnit = {
 
   HealthDataType.NUTRITION: HealthDataUnit.NO_UNIT,
   HealthDataType.MENSTRUATION_FLOW: HealthDataUnit.NO_UNIT,
+  HealthDataType.WATER_TEMPERATURE: HealthDataUnit.DEGREE_CELSIUS,
+  HealthDataType.UNDERWATER_DEPTH: HealthDataUnit.METER,
+  HealthDataType.UV_INDEX: HealthDataUnit.COUNT,
 
   // Health Connect
   HealthDataType.TOTAL_CALORIES_BURNED: HealthDataUnit.KILOCALORIE,
@@ -380,6 +409,7 @@ enum HealthDataUnit {
 
   // Length units
   METER,
+  CENTIMETER,
   INCH,
   FOOT,
   YARD,
@@ -444,6 +474,8 @@ enum HealthDataUnit {
   BEATS_PER_MINUTE,
   RESPIRATIONS_PER_MINUTE,
   MILLIGRAM_PER_DECILITER,
+  MILLIMOLES_PER_LITER,
+  METER_PER_SECOND,
   UNKNOWN_UNIT,
   NO_UNIT,
 }
@@ -461,6 +493,7 @@ enum HealthWorkoutActivityType {
   BASKETBALL,
   BIKING, // This also entails the iOS version where it is called CYCLING
   BOXING,
+  CARDIO_DANCE,
   CRICKET,
   CROSS_COUNTRY_SKIING,
   CURLING,
@@ -499,7 +532,6 @@ enum HealthWorkoutActivityType {
   // iOS only
   BARRE,
   BOWLING,
-  CARDIO_DANCE,
   CLIMBING,
   COOLDOWN,
   CORE_TRAINING,
@@ -532,6 +564,7 @@ enum HealthWorkoutActivityType {
   WHEELCHAIR_RUN_PACE,
   WHEELCHAIR_WALK_PACE,
   WRESTLING,
+  UNDERWATER_DIVING,
 
   // Android only
   BIKING_STATIONARY,

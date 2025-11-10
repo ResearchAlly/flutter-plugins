@@ -1,3 +1,24 @@
+## 4.3.0
+
+* Fix issue where stream function made a new thread each time a recording starts - Fixes [#1242](https://github.com/cph-cachet/flutter-plugins/issues/1242)
+* Updated Gradle and Kotlin
+* Updated `permission_handler: ^12.0.0`
+* Updated `sdk >=3.8.1`
+
+## 4.2.2
+
+* Reverts [#1226](https://github.com/cph-cachet/flutter-plugins/pull/1226)
+
+## 4.2.0
+
+* Gradle files restructure for example app
+* Small upgrades to ios example app
+* Upgrading gradle version
+* Upgrading agp
+* Upgrading targetSdkVersion
+* Upgrading compileSdkVersion
+* Upgrading ndkVersion
+
 ## 4.1.1
 
 * enable AGP 8.0

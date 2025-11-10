@@ -73,14 +73,18 @@ class AudiogramHealthValue extends HealthValue {
   /// Create a [AudiogramHealthValue] based on a health data point from native data format.
   factory AudiogramHealthValue.fromHealthDataPoint(dynamic dataPoint) =>
       AudiogramHealthValue(
-          frequencies: List<num>.from(dataPoint['frequencies'] as List),
-          leftEarSensitivities:
-              List<num>.from(dataPoint['leftEarSensitivities'] as List),
-          rightEarSensitivities:
-              List<num>.from(dataPoint['rightEarSensitivities'] as List));
+        frequencies: List<num>.from(dataPoint['frequencies'] as List),
+        leftEarSensitivities: List<num>.from(
+          dataPoint['leftEarSensitivities'] as List,
+        ),
+        rightEarSensitivities: List<num>.from(
+          dataPoint['rightEarSensitivities'] as List,
+        ),
+      );
 
   @override
-  String toString() => """$runtimeType - frequencies: ${frequencies.toString()},
+  String toString() =>
+      """$runtimeType - frequencies: ${frequencies.toString()},
     left ear sensitivities: ${leftEarSensitivities.toString()},
     right ear sensitivities: ${rightEarSensitivities.toString()}""";
 
@@ -140,43 +144,48 @@ class WorkoutHealthValue extends HealthValue {
   /// Might not be available for all workouts.
   HealthDataUnit? totalStepsUnit;
 
-  WorkoutHealthValue(
-      {required this.workoutActivityType,
-      this.totalEnergyBurned,
-      this.totalEnergyBurnedUnit,
-      this.totalDistance,
-      this.totalDistanceUnit,
-      this.totalSteps,
-      this.totalStepsUnit});
+  WorkoutHealthValue({
+    required this.workoutActivityType,
+    this.totalEnergyBurned,
+    this.totalEnergyBurnedUnit,
+    this.totalDistance,
+    this.totalDistanceUnit,
+    this.totalSteps,
+    this.totalStepsUnit,
+  });
 
   /// Create a [WorkoutHealthValue] based on a health data point from native data format.
   factory WorkoutHealthValue.fromHealthDataPoint(dynamic dataPoint) =>
       WorkoutHealthValue(
-          workoutActivityType: HealthWorkoutActivityType.values.firstWhere(
-            (element) => element.name == dataPoint['workoutActivityType'],
-            orElse: () => HealthWorkoutActivityType.OTHER,
-          ),
-          totalEnergyBurned: dataPoint['totalEnergyBurned'] != null
-              ? (dataPoint['totalEnergyBurned'] as num).toInt()
-              : null,
-          totalEnergyBurnedUnit: dataPoint['totalEnergyBurnedUnit'] != null
-              ? HealthDataUnit.values.firstWhere((element) =>
-                  element.name == dataPoint['totalEnergyBurnedUnit'])
-              : null,
-          totalDistance: dataPoint['totalDistance'] != null
-              ? (dataPoint['totalDistance'] as num).toInt()
-              : null,
-          totalDistanceUnit: dataPoint['totalDistanceUnit'] != null
-              ? HealthDataUnit.values.firstWhere(
-                  (element) => element.name == dataPoint['totalDistanceUnit'])
-              : null,
-          totalSteps: dataPoint['totalSteps'] != null
-              ? (dataPoint['totalSteps'] as num).toInt()
-              : null,
-          totalStepsUnit: dataPoint['totalStepsUnit'] != null
-              ? HealthDataUnit.values.firstWhere(
-                  (element) => element.name == dataPoint['totalStepsUnit'])
-              : null);
+        workoutActivityType: HealthWorkoutActivityType.values.firstWhere(
+          (element) => element.name == dataPoint['workoutActivityType'],
+          orElse: () => HealthWorkoutActivityType.OTHER,
+        ),
+        totalEnergyBurned: dataPoint['totalEnergyBurned'] != null
+            ? (dataPoint['totalEnergyBurned'] as num).toInt()
+            : null,
+        totalEnergyBurnedUnit: dataPoint['totalEnergyBurnedUnit'] != null
+            ? HealthDataUnit.values.firstWhere(
+                (element) => element.name == dataPoint['totalEnergyBurnedUnit'],
+              )
+            : null,
+        totalDistance: dataPoint['totalDistance'] != null
+            ? (dataPoint['totalDistance'] as num).toInt()
+            : null,
+        totalDistanceUnit: dataPoint['totalDistanceUnit'] != null
+            ? HealthDataUnit.values.firstWhere(
+                (element) => element.name == dataPoint['totalDistanceUnit'],
+              )
+            : null,
+        totalSteps: dataPoint['totalSteps'] != null
+            ? (dataPoint['totalSteps'] as num).toInt()
+            : null,
+        totalStepsUnit: dataPoint['totalStepsUnit'] != null
+            ? HealthDataUnit.values.firstWhere(
+                (element) => element.name == dataPoint['totalStepsUnit'],
+              )
+            : null,
+      );
 
   @override
   Function get fromJsonFunction => _$WorkoutHealthValueFromJson;
@@ -208,13 +217,14 @@ class WorkoutHealthValue extends HealthValue {
 
   @override
   int get hashCode => Object.hash(
-      workoutActivityType,
-      totalEnergyBurned,
-      totalEnergyBurnedUnit,
-      totalDistance,
-      totalDistanceUnit,
-      totalSteps,
-      totalStepsUnit);
+    workoutActivityType,
+    totalEnergyBurned,
+    totalEnergyBurnedUnit,
+    totalDistance,
+    totalDistanceUnit,
+    totalSteps,
+    totalStepsUnit,
+  );
 }
 
 /// A [HealthValue] object for ECGs
@@ -256,13 +266,18 @@ class ElectrocardiogramHealthValue extends HealthValue {
   factory ElectrocardiogramHealthValue.fromHealthDataPoint(dynamic dataPoint) =>
       ElectrocardiogramHealthValue(
         voltageValues: (dataPoint['voltageValues'] as List)
-            .map((voltageValue) =>
-                ElectrocardiogramVoltageValue.fromHealthDataPoint(voltageValue))
+            .map(
+              (voltageValue) =>
+                  ElectrocardiogramVoltageValue.fromHealthDataPoint(
+                    voltageValue,
+                  ),
+            )
             .toList(),
         averageHeartRate: dataPoint['averageHeartRate'] as num?,
         samplingFrequency: dataPoint['samplingFrequency'] as double?,
-        classification: ElectrocardiogramClassification.values
-            .firstWhere((c) => c.value == dataPoint['classification']),
+        classification: ElectrocardiogramClassification.values.firstWhere(
+          (c) => c.value == dataPoint['classification'],
+        ),
       );
 
   @override
@@ -275,7 +290,11 @@ class ElectrocardiogramHealthValue extends HealthValue {
 
   @override
   int get hashCode => Object.hash(
-      voltageValues, averageHeartRate, samplingFrequency, classification);
+    voltageValues,
+    averageHeartRate,
+    samplingFrequency,
+    classification,
+  );
 
   @override
   String toString() =>
@@ -298,10 +317,11 @@ class ElectrocardiogramVoltageValue extends HealthValue {
 
   /// Create a [ElectrocardiogramVoltageValue] based on a health data point from native data format.
   factory ElectrocardiogramVoltageValue.fromHealthDataPoint(
-          dynamic dataPoint) =>
-      ElectrocardiogramVoltageValue(
-          voltage: dataPoint['voltage'] as num,
-          timeSinceSampleStart: dataPoint['timeSinceSampleStart'] as num);
+    dynamic dataPoint,
+  ) => ElectrocardiogramVoltageValue(
+    voltage: dataPoint['voltage'] as num,
+    timeSinceSampleStart: dataPoint['timeSinceSampleStart'] as num,
+  );
 
   @override
   Function get fromJsonFunction => _$ElectrocardiogramVoltageValueFromJson;
@@ -332,10 +352,7 @@ class InsulinDeliveryHealthValue extends HealthValue {
   /// If it's basal, bolus or unknown reason for insulin dosage
   InsulinDeliveryReason reason;
 
-  InsulinDeliveryHealthValue({
-    required this.units,
-    required this.reason,
-  });
+  InsulinDeliveryHealthValue({required this.units, required this.reason});
 
   factory InsulinDeliveryHealthValue.fromHealthDataPoint(dynamic dataPoint) {
     final units = dataPoint['value'] as num;
@@ -345,8 +362,8 @@ class InsulinDeliveryHealthValue extends HealthValue {
         : Map<String, dynamic>.from(dataPoint['metadata'] as Map);
     final reasonIndex =
         metadata == null || !metadata.containsKey('HKInsulinDeliveryReason')
-            ? 0
-            : metadata['HKInsulinDeliveryReason'] as double;
+        ? 0
+        : metadata['HKInsulinDeliveryReason'] as double;
     final reason = InsulinDeliveryReason.values[reasonIndex.toInt()];
 
     return InsulinDeliveryHealthValue(units: units.toDouble(), reason: reason);
@@ -398,7 +415,7 @@ class InsulinDeliveryHealthValue extends HealthValue {
 ///  * [fatMonounsaturated] - the amount of monounsaturated fat in grams
 ///  * [fatPolyunsaturated] - the amount of polyunsaturated fat in grams
 ///  * [fatSaturated] - the amount of saturated fat in grams
-///  * [fatTransMonoenoic] - the amount of
+///  * [fatTransMonoenoic] - the amount of trans-monoenoic fat in grams
 ///  * [fatUnsaturated] - the amount of unsaturated fat in grams
 ///  * [fiber] - the amount of fiber in grams
 ///  * [iodine] - the amount of iodine in grams
@@ -426,6 +443,7 @@ class NutritionHealthValue extends HealthValue {
   String? name;
 
   /// The type of meal.
+  @JsonKey(name: 'meal_type')
   String? mealType;
 
   /// The amount of calories in kcal.
@@ -444,42 +462,55 @@ class NutritionHealthValue extends HealthValue {
   double? caffeine;
 
   /// The amount of vitamin A in grams.
+  @JsonKey(name: 'vitamin_a')
   double? vitaminA;
 
   /// The amount of thiamine (B1) in grams.
+  @JsonKey(name: 'b1_thiamine')
   double? b1Thiamine;
 
   /// The amount of riboflavin (B2) in grams.
+  @JsonKey(name: 'b2_riboflavin')
   double? b2Riboflavin;
 
   /// The amount of niacin (B3) in grams.
+  @JsonKey(name: 'b3_niacin')
   double? b3Niacin;
 
   /// The amount of pantothenic acid (B5) in grams.
+  @JsonKey(name: 'b5_pantothenic_acid')
   double? b5PantothenicAcid;
 
   /// The amount of pyridoxine (B6) in grams.
+  @JsonKey(name: 'b6_pyridoxine')
   double? b6Pyridoxine;
 
   /// The amount of biotin (B7) in grams.
+  @JsonKey(name: 'b7_biotin')
   double? b7Biotin;
 
   /// The amount of folate (B9) in grams.
+  @JsonKey(name: 'b9_folate')
   double? b9Folate;
 
   /// The amount of cobalamin (B12) in grams.
+  @JsonKey(name: 'b12_cobalamin')
   double? b12Cobalamin;
 
   /// The amount of vitamin C in grams.
+  @JsonKey(name: 'vitamin_c')
   double? vitaminC;
 
   /// The amount of vitamin D in grams.
+  @JsonKey(name: 'vitamin_d')
   double? vitaminD;
 
   /// The amount of vitamin E in grams.
+  @JsonKey(name: 'vitamin_e')
   double? vitaminE;
 
   /// The amount of vitamin K in grams.
+  @JsonKey(name: 'vitamin_k')
   double? vitaminK;
 
   /// The amount of calcium in grams.
@@ -501,18 +532,23 @@ class NutritionHealthValue extends HealthValue {
   double? copper;
 
   /// The amount of unsaturated fat in grams.
+  @JsonKey(name: 'fat_unsaturated')
   double? fatUnsaturated;
 
   /// The amount of monounsaturated fat in grams.
+  @JsonKey(name: 'fat_monounsaturated')
   double? fatMonounsaturated;
 
   /// The amount of polyunsaturated fat in grams.
+  @JsonKey(name: 'fat_polyunsaturated')
   double? fatPolyunsaturated;
 
   /// The amount of saturated fat in grams.
+  @JsonKey(name: 'fat_saturated')
   double? fatSaturated;
 
   /// The amount of trans-monoenoic fat in grams.
+  @JsonKey(name: 'fat_trans_monoenoic')
   double? fatTransMonoenoic;
 
   /// The amount of fiber in grams.
@@ -604,24 +640,29 @@ class NutritionHealthValue extends HealthValue {
   @override
   Function get fromJsonFunction => _$NutritionHealthValueFromJson;
   factory NutritionHealthValue.fromJson(Map<String, dynamic> json) =>
-      (json) as NutritionHealthValue;
+      _$NutritionHealthValueFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$NutritionHealthValueToJson(this);
-
-  static double? _toDoubleOrNull(num? value) => value?.toDouble();
 
   /// Create a [NutritionHealthValue] based on a health data point from native data format.
   factory NutritionHealthValue.fromHealthDataPoint(dynamic dataPoint) {
     dataPoint = dataPoint as Map<Object?, Object?>;
-    // where key is not null
-    final Map<String, Object?> dataPointMap = Map.fromEntries(dataPoint.entries
-        .where((entry) => entry.key != null)
-        .map((entry) => MapEntry(entry.key as String, entry.value)));
+    // Convert to Map<String, Object?> and ensure all expected fields are present
+    final Map<String, Object?> dataPointMap = {};
+
+    // Add all entries from the native data
+    dataPoint.forEach((key, value) {
+      if (key != null) {
+        dataPointMap[key as String] = value;
+      }
+    });
+
     return _$NutritionHealthValueFromJson(dataPointMap);
   }
 
   @override
-  String toString() => """$runtimeType - protein: ${protein.toString()},
+  String toString() =>
+      """$runtimeType - protein: ${protein.toString()},
     calories: ${calories.toString()},
     fat: ${fat.toString()},
     name: ${name.toString()},
@@ -716,50 +757,50 @@ class NutritionHealthValue extends HealthValue {
 
   @override
   int get hashCode => Object.hashAll([
-        protein,
-        calories,
-        fat,
-        name,
-        carbs,
-        caffeine,
-        vitaminA,
-        b1Thiamine,
-        b2Riboflavin,
-        b3Niacin,
-        b5PantothenicAcid,
-        b6Pyridoxine,
-        b7Biotin,
-        b9Folate,
-        b12Cobalamin,
-        vitaminC,
-        vitaminD,
-        vitaminE,
-        vitaminK,
-        calcium,
-        chloride,
-        cholesterol,
-        choline,
-        chromium,
-        copper,
-        fatUnsaturated,
-        fatMonounsaturated,
-        fatPolyunsaturated,
-        fatSaturated,
-        fatTransMonoenoic,
-        fiber,
-        iodine,
-        iron,
-        magnesium,
-        manganese,
-        molybdenum,
-        phosphorus,
-        potassium,
-        selenium,
-        sodium,
-        sugar,
-        water,
-        zinc,
-      ]);
+    protein,
+    calories,
+    fat,
+    name,
+    carbs,
+    caffeine,
+    vitaminA,
+    b1Thiamine,
+    b2Riboflavin,
+    b3Niacin,
+    b5PantothenicAcid,
+    b6Pyridoxine,
+    b7Biotin,
+    b9Folate,
+    b12Cobalamin,
+    vitaminC,
+    vitaminD,
+    vitaminE,
+    vitaminK,
+    calcium,
+    chloride,
+    cholesterol,
+    choline,
+    chromium,
+    copper,
+    fatUnsaturated,
+    fatMonounsaturated,
+    fatPolyunsaturated,
+    fatSaturated,
+    fatTransMonoenoic,
+    fiber,
+    iodine,
+    iron,
+    magnesium,
+    manganese,
+    molybdenum,
+    phosphorus,
+    potassium,
+    selenium,
+    sodium,
+    sugar,
+    water,
+    zinc,
+  ]);
 }
 
 enum MenstrualFlow {
@@ -897,14 +938,15 @@ class MenstruationFlowHealthValue extends HealthValue {
       flow: menstrualFlow,
       isStartOfCycle:
           dataPoint['metadata']?.containsKey('HKMenstrualCycleStart') == true
-              ? dataPoint['metadata']['HKMenstrualCycleStart'] == 1.0
-              : null,
+          ? dataPoint['metadata']['HKMenstrualCycleStart'] == 1.0
+          : null,
       wasUserEntered:
           dataPoint['metadata']?.containsKey('HKWasUserEntered') == true
-              ? dataPoint['metadata']['HKWasUserEntered'] == 1.0
-              : null,
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(dataPoint['date_from'] as int),
+          ? dataPoint['metadata']['HKWasUserEntered'] == 1.0
+          : null,
+      dateTime: DateTime.fromMillisecondsSinceEpoch(
+        dataPoint['date_from'] as int,
+      ),
     );
   }
 
