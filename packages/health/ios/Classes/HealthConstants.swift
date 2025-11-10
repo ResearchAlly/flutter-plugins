@@ -125,6 +125,7 @@ enum HealthConstants {
     static let RESPIRATORY_RATE = "RESPIRATORY_RATE"
     static let PERIPHERAL_PERFUSION_INDEX = "PERIPHERAL_PERFUSION_INDEX"
     static let STEPS = "STEPS"
+    static let PUSH_COUNT = "PUSH_COUNT"
     static let WAIST_CIRCUMFERENCE = "WAIST_CIRCUMFERENCE"
     static let WALKING_HEART_RATE = "WALKING_HEART_RATE"
     static let WEIGHT = "WEIGHT"

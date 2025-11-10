@@ -421,6 +421,7 @@ public class SwiftHealthPlugin: NSObject, FlutterPlugin {
         dataTypesDict[HealthConstants.INSULIN_DELIVERY] = HKSampleType.quantityType(forIdentifier: .insulinDelivery)!
         dataTypesDict[HealthConstants.RESTING_HEART_RATE] = HKSampleType.quantityType(forIdentifier: .restingHeartRate)!
         dataTypesDict[HealthConstants.STEPS] = HKSampleType.quantityType(forIdentifier: .stepCount)!
+        dataQuantityTypesDict[HealthConstants.PUSH_COUNT] = HKSampleType.quantityType(forIdentifier: .pushCount)!
         dataTypesDict[HealthConstants.WAIST_CIRCUMFERENCE] = HKSampleType.quantityType(forIdentifier: .waistCircumference)!
         dataTypesDict[HealthConstants.WALKING_HEART_RATE] = HKSampleType.quantityType(forIdentifier: .walkingHeartRateAverage)!
         dataTypesDict[HealthConstants.WEIGHT] = HKSampleType.quantityType(forIdentifier: .bodyMass)!
