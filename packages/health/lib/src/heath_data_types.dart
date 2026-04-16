@@ -475,6 +475,7 @@ enum HealthWorkoutActivityType {
   BASKETBALL,
   BIKING, // This also entails the iOS version where it is called CYCLING
   BOXING,
+  CARDIO_DANCE,
   CRICKET,
   CROSS_COUNTRY_SKIING,
   CURLING,
@@ -513,7 +514,6 @@ enum HealthWorkoutActivityType {
   // iOS only
   BARRE,
   BOWLING,
-  CARDIO_DANCE,
   CLIMBING,
   COOLDOWN,
   CORE_TRAINING,
