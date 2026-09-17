@@ -114,7 +114,23 @@ class HealthDataReader(
                     "Unable to return $dataType due to the following exception:"
                 )
                 Log.e("FLUTTER_HEALTH::ERROR", Log.getStackTraceString(e))
-                result.success(emptyList<Map<String, Any?>>()) // Return empty list instead of null
+                // Must surface as a channel error, not result.success(emptyList()). This
+                // catch wraps the whole paginated readRecords() loop above, so a failure
+                // on any page (a transient Health Connect/binder error, the app losing
+                // foreground mid-call, etc.) discards every record already read in this
+                // call. Returning that as a "successful" empty list is indistinguishable
+                // on the Dart side from a genuine zero-data range, so callers persisted
+                // it as one - permanently, since sync bookkeeping advances past whatever
+                // range it was asked for. Propagating a real error lets the caller (see
+                // getHealthDataStartUpAndroid's catch in the host app) abort without
+                // persisting, so the same range gets retried on the next sync instead.
+                Handler(context.mainLooper).run {
+                    result.error(
+                        "GET_DATA_FAILED",
+                        "Failed to get $dataType data: ${e.message}",
+                        null
+                    )
+                }
             }
         }
     }
